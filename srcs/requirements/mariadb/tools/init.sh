@@ -1,11 +1,16 @@
 #!/bin/bash
 
-service mysql start
 
-echo -e "\ny\ny\nabc\nabc\ny\ny\ny\ny\n" | ./usr/bin/mysql_secure_installation
+service mysql restart 
 
-# cp -R /mariadb.conf   /etc/mysql/mariadb.conf.d/50-server.cnf
+echo "CREATE USER IF NOT EXISTS '${WORDPRESS_DB_USER}'@'%' IDENTIFIED BY '${WORDPRESS_DB_PASSWORD}';" >> setupDB.sql
 
-# mysql < /setupDB.sql
+echo "CREATE DATABASE IF NOT EXISTS ${WORDPRESS_DB_NAME};" >> setupDB.sql
+
+echo "GRANT ALL PRIVILEGES ON ${WORDPRESS_DB_NAME}.* TO '${WORDPRESS_DB_USER}'@'%';" >> setupDB.sql
+
+echo "FLUSH PRIVILEGES;" >> setupDB.sql
+
+mysql < setupDB.sql
 
 mysqld

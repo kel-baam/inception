@@ -2,7 +2,7 @@
 CREATE USER 'kaoutar'@'%' IDENTIFIED BY '123456789';
 
 -- Create a database if it doesn't exist
-CREATE DATABASE IF NOT EXISTS myDB;
+CREATE DATABASE IF NOT EXISTS m;
 
 -- Grant all privileges on the database to the user
 GRANT ALL PRIVILEGES ON myDB.* TO 'kaoutar'@'%';
