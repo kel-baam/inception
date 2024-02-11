@@ -1,8 +1,15 @@
-version: '3'
+version: '2'
 services:
-  mariadb:
-    container_name: mariadb
-    build : ./requirements/mariadb
+  mariadb_service:
+    image: mariadb_service
+    container_name: mariadb_service
+    build : 
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+      args:
+        - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+        - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+        - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
     restart: always
     networks:
       - inception
@@ -10,11 +17,19 @@ services:
       - dataBase:/var/lib/mysql
     env_file:
       - .env
-  wordpress:
+  wordpress_service:
+    image: wordpress_service
     depends_on:
-      - mariadb
-    container_name: wordpress
-    build : ./requirements/wordpress
+      - mariadb_service
+    container_name: wordpress_service
+    build :
+       context:  ./requirements/wordpress
+       dockerfile: Dockerfile
+       args:
+        - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+        - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
+        - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+        - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
     restart: always
     networks:
       - inception
@@ -22,10 +37,13 @@ services:
       - wordpress:/var/www/html
     env_file:
       - .env
-  nginx:
+  nginx_service:
+    image: nginx_service
     depends_on:
-      - wordpress
-    build : ./requirements/nginx 
+      - wordpress_service
+    build :
+      context: ./requirements/nginx 
+      dockerfile: Dockerfile
     restart: always
     ports: 
       - "443:443" 

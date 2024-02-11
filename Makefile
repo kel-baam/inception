@@ -5,7 +5,7 @@ WP_VOLUME_PATH = "$(G_VOLUME_PATH)/wordpress"
 
 up:
 	mkdir -p $(DB_VOLUME_PATH)  $(WP_VOLUME_PATH)
-	docker compose -f ./srcs/docker-compose.yml up --build
+	docker compose -f ./srcs/docker-compose.yml up
 
 down:
 	docker compose -f ./srcs/docker-compose.yml down
